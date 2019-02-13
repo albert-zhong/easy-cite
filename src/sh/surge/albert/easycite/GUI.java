@@ -75,7 +75,7 @@ public class GUI extends JFrame
             // IF First, MI, Last are available
             if (!fields.get(0).getText().equals("") && !fields.get(2).getText().equals("") && !fields.get(1).getText().equals("")) {
                 finalCitation += fields.get(2).getText() + ", " + fields.get(0).getText() + " " + fields.get(1).getText() + ". ";
-            } else if (!fields.get(0).getText().equals("") && !fields.get(2).getText().equals("")) { // ONLY First Last avaliable
+            } else if (!fields.get(0).getText().equals("") && !fields.get(2).getText().equals("")) { // ONLY First Last available
                 finalCitation += fields.get(2).getText() + ", " + fields.get(0).getText() + ". ";
             }
 
