@@ -46,7 +46,6 @@ public class GUI extends JFrame
         datePanel.add(fields.get(fields.size() - 1));
         panel.add(datePanel);
 
-
         JButton createCitation = new JButton("Create citation");
         panel.add(createCitation);
         createCitation.addActionListener(this);
@@ -54,8 +53,6 @@ public class GUI extends JFrame
         citation = new JTextArea("Citation here", 20, 20);
         citation.setEditable(false);
         panel.add(citation);
-
-
 
         add(panel);
         pack();
@@ -103,13 +100,8 @@ public class GUI extends JFrame
             // URL
             finalCitation += fields.get(6).getText() + ".";
 
-
             citation.setText(finalCitation);
         }
-
-
-
-
     }
 
 
