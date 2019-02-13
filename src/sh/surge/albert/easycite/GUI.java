@@ -77,7 +77,6 @@ public class GUI extends JFrame
             }
 
             // Article title
-
             finalCitation += "\"" + fields.get(3).getText() + ".\" ";
 
             // Website title
