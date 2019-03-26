@@ -64,6 +64,10 @@ public class GUI extends JFrame
 
         String finalCitation = "";
 
+        for (JTextField field : fields) { // removes beginning and trailing whitespace in string
+            field.setText(field.getText().trim());
+        }
+
         if (fields.get(3).getText().equals("") || fields.get(6).getText().equals("") || fields.get(4).getText().equals("")) {
             citation.setText("Requires at least the article title, the website title, and the url");
         } else {
