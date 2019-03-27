@@ -14,7 +14,7 @@ public class GUI extends JFrame
     private ArrayList<JTextField> fields = new ArrayList<>();
 
     private String[] months = {"", "Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."};
-    JComboBox month = new JComboBox(months);
+    JComboBox<String> month = new JComboBox<>(months);
 
     public GUI() {
         super("easy-cite");
@@ -68,45 +68,116 @@ public class GUI extends JFrame
             field.setText(field.getText().trim());
         }
 
-        if (fields.get(3).getText().equals("") || fields.get(6).getText().equals("") || fields.get(4).getText().equals("")) {
+        String firstNameText = fields.get(0).getText();
+        String miText = fields.get(1).getText();
+        String lastNameText = fields.get(2).getText();
+        String articleTitleText = fields.get(3).getText();
+        String websiteTitleText = fields.get(4).getText();
+        String sponsorText = fields.get(5).getText();
+        String urlText = fields.get(6).getText();
+        String dayText = fields.get(7).getText();
+        String yearText = fields.get(8).getText();
+
+
+        // Create the citation
+        if (articleTitleText.equals("") || urlText.equals("") || websiteTitleText.equals("")) {
             citation.setText("Requires at least the article title, the website title, and the url");
+        } else if (!isValidYear(yearText)) {
+            citation.setText("Improper year");
+        } else if(!isValidDay(dayText)) {
+            citation.setText("Improper day");
+        } else if(!miText.equals("") && !isMiddleInitialValid(miText)) { // if MI exists and is wrong
+            citation.setText("Improper MI");
         } else {
+            // simplifying day if first digit is 0 (e.g 01 becomes 1)
+            if (dayText.charAt(0) == '0') {
+                dayText = dayText.substring(1);
+            }
+
+            // capitalizing MI
+            miText = miText.toUpperCase();
 
             // Author name
             // IF First, MI, Last are available
-            if (!fields.get(0).getText().equals("") && !fields.get(2).getText().equals("") && !fields.get(1).getText().equals("")) {
-                finalCitation += fields.get(2).getText() + ", " + fields.get(0).getText() + " " + fields.get(1).getText() + ". ";
-            } else if (!fields.get(0).getText().equals("") && !fields.get(2).getText().equals("")) { // ONLY First Last available
-                finalCitation += fields.get(2).getText() + ", " + fields.get(0).getText() + ". ";
+            if (!firstNameText.equals("") && !lastNameText.equals("") && !miText.equals("")) {
+                finalCitation += lastNameText + ", " + firstNameText + " " + miText + ". ";
+            } else if (!firstNameText.equals("") && !lastNameText.equals("")) { // ONLY First Last available
+                finalCitation += lastNameText + ", " + firstNameText + ". ";
             }
 
             // Article title
-            finalCitation += "\"" + fields.get(3).getText() + ".\" ";
+            finalCitation += "\"" + articleTitleText + ".\" ";
 
             // Website title
-            finalCitation += fields.get(4).getText() + ", ";
+            finalCitation += websiteTitleText + ", ";
 
             // sponsor
-            if (!fields.get(5).getText().equals("")) {
-                finalCitation += fields.get(5).getText() + ", ";
+            if (!sponsorText.equals("")) {
+                finalCitation += sponsorText + ", ";
             }
 
             // ONLY year AND month AND day available
-            if (!fields.get(8).getText().equals("") || month.getSelectedIndex() != 0 || !fields.get(7).getText().equals("")) {
-                finalCitation += fields.get(7).getText() + " " + month.getSelectedItem() + " " + fields.get(8).getText() + ", ";
-            } else if (!fields.get(8).getText().equals("") || month.getSelectedIndex() != 0) { // ONLY year AND month
-                finalCitation += month.getSelectedItem() + " " + fields.get(8).getText() + ", ";
-            } else if (!fields.get(8).getText().equals("")) { // ONLY year
-                finalCitation += fields.get(8).getText() + ", ";
+            if (!yearText.equals("") || month.getSelectedIndex() != 0 || !dayText.equals("")) {
+                finalCitation += dayText + " " + month.getSelectedItem() + " " + yearText + ", ";
+            } else if (!yearText.equals("") || month.getSelectedIndex() != 0) { // ONLY year AND month
+                finalCitation += month.getSelectedItem() + " " + yearText + ", ";
+            } else if (!yearText.equals("")) { // ONLY year
+                finalCitation += yearText + ", ";
             }
 
             // URL
-            finalCitation += fields.get(6).getText() + ".";
+            finalCitation += urlText + ".";
 
             citation.setText(finalCitation);
         }
     }
 
+    private boolean isValidDay(String stringDay) {
+        if (stringDay.length() != 1 && stringDay.length() != 2) { // Day must be 1 digit or 2 digits long
+            return false;
+        }
+
+        char char1 = stringDay.charAt(0);
+        char char2 = stringDay.charAt(1);
+
+        if (!Character.isDigit(char1) || !Character.isDigit(char2)) { // both must be digits
+            return false;
+        }
+
+        if (Character.getNumericValue(char1) == 0 && Character.getNumericValue(char2) == 0) { // can't both be 0
+            return false;
+        }
+
+        if (Character.getNumericValue(char1) > 3) {
+            return false; // Days must be 0, 1, 2, or 3
+        }
+
+        return true; // if it passes all tests, return true
+    }
+
+    private boolean isValidYear(String stringYear) {
+        if (stringYear.length() > 4) { // Year cannot be greater than 4 chars long. Any programmers in the future
+                                        // reading this will have to change it
+            return false;
+        }
+
+        for (int i=0; i<stringYear.length(); i++) {
+            if (!Character.isDigit(stringYear.charAt(i))) {  // if you run into any non-digits, it's not a valid year
+                return false;
+            }
+        }
+        return true; // if it passes all tests, return true
+    }
+
+    private boolean isMiddleInitialValid(String MI) {
+        if (MI.length() != 1) {
+            return false;
+        }
+        if (!Character.isLetter(MI.charAt(0))) {
+            return false;
+        }
+        return true;
+    }
 
     private void createLabelAndField(Container container, String text, int column) {
         JPanel panel = new JPanel();
@@ -133,4 +204,3 @@ public class GUI extends JFrame
     }
 
 }
-
